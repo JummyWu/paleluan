@@ -1,0 +1,24 @@
+{% for i in content %}
+    <tr class="gradeA odd" role="row">
+        <td class="sorting_1">{{ i.id }}</td>
+{#        <td><a href="/fms/detail/{{ i.id }}">{{ i.title }}</a></td>#}
+        <td>{{ i.majors }}</td>
+        <td class="center">{{ i.worktype  }}</td>
+        <td class="center">{{ i.contentc  }}</td>
+        <td class="center">{{ i.datet }}</td>
+        <td class="center">{{ i.starttime }}</td>
+        <td class="center">{{ i.lengtime }}</td>
+        <td class="center">{{ i.networkn }}</td>
+        <td class="center">{{ i.department_name }}</td>
+        <td class="center">{{ i.head }}</td>
+        <td class="center">{{ i.announeoms }}</td>
+{#        <td class="center">{{ i.singleeoms }}</td>#}
+        <td class="center">{{ i.enforcer }}</td>
+        <td class="center">{{ i.remark }}</td>
+
+
+
+    </tr>
+{% endfor %}
+
+

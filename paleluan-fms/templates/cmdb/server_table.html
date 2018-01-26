@@ -1,0 +1,84 @@
+{% for i in content %}
+    <tr class="gradeA odd" role="row">
+        <td class="sorting_1">{{ forloop.counter }}</td>
+        <td class="center">{{ i.in_ip }}</td>
+{#        <td><a href="/fms/detail/{{ i.id }}">{{ i.host_name }}</a></td>#}
+        <td>
+            <a name="host_name" class="text-info" href="#">{{ i.host_name }}</a>
+            <input type="hidden" value="{{ i.os_version }}&
+                                                            {{ i.os_kernel }}&{{ i.cpu_model }}&
+                                                            {{ i.cpu_count }}&{{ i.cpu_cores }}&
+                                                            {{ i.mem }}&{{ i.disk }}&
+                                                            {{ i.max_open_files }}&
+                                                            {{ i.uptime }}&
+                                                            {{ i.ex_ip }}">
+        </td>
+        <td class="center">{{ i.project_name }}</td>
+        <td class="center">{{ i.position }}</td>
+        <td class="center">{{ i.service_name }}</td>
+{#                <td class="center">{{ i.status }}</td>#}
+        <td>
+            {% if i.status %}
+                <span><img src="/static/img/Up.gif">UP</span>
+            {% else %}
+                <span style=""><img src="/static/img/Down.gif">DOWN</span>
+            {% endif %}
+        </td>
+        <td class="center">{{ i.author.fullname }}</td>
+        <td class="center">{{ i.ctime }}</td>
+
+        <td class="center">
+            <a id="edit_Id_{{i.id}}" class="btn btn-xs btn-success btn-edit" data-toggle="modal" value="编辑" onclick="get_edit_info(this)" data-target="#editInfoModal">编辑</a>
+{#            <a class="btn btn-xs btn-primary btn-email" data-toggle="modal" data-target="#editor"#}
+{#               data-row={{ i.id }}|{{ i.author.fullname }}>更新</a>#}
+            <a class="btn btn-xs btn-primary btn-email" id="server_update_{{i.id}}">更新</a>
+{#            <a href=/fms/edit?id={{ i.id }} class="btn btn-xs btn-danger btn-edit">删除</a>#}
+            <a class="btn btn-xs btn-danger btn-edit" id="server_delete_{{i.id}}">删除</a>
+        </td>
+    </tr>
+
+        <script>
+        /*
+        *主机基本信息提示
+        */
+        $("table tbody tr td a[name='host_name']").each(function () {
+            var content = $(this).next().val().split('&');//获取隐藏的主机基本信息内容
+            console.log($(this))
+            var arr = new Array();
+            arr.push("<div><span>系统版本</span>&nbsp&nbsp&nbsp&nbsp" + "<span style='float:right'>" + content[0] + "</span></div>")
+            arr.push("<div><span>系统内核</span>&nbsp&nbsp&nbsp&nbsp" + "<span style='float:right'>" + content[1] + "</span></div>")
+            arr.push("<div><span>CPU型号</span>&nbsp&nbsp&nbsp&nbsp" + "<span style='float:right'>" + content[2] + "</span></div>")
+            arr.push("<div><span>CPU个数</span>&nbsp&nbsp&nbsp&nbsp" + "<span style='float:right'>" + content[3] + "</span></div>")
+            arr.push("<div><span>CPU核数</span>&nbsp&nbsp&nbsp&nbsp" + "<span style='float:right'>" + content[4] + "</span></div>")
+            arr.push("<div><span>内存</span>&nbsp&nbsp&nbsp&nbsp" + "<span style='float:right'>" + content[5] + " M</span></div>")
+            arr.push("<div><span>硬盘</span>&nbsp&nbsp&nbsp&nbsp" + "<span style='float:right'>" + content[6] + "</span></div>")
+            arr.push("<div><span>最大文件打开数</span>&nbsp&nbsp&nbsp&nbsp" + "<span style='float:right'>" + content[7] + "</span></div>")
+            arr.push("<div><span>运行时间</span>&nbsp&nbsp&nbsp&nbsp" + "<span style='float:right'>" + content[8] + " 天</span></div>")
+            arr.push("<div><span>外网IP</span>&nbsp&nbsp&nbsp&nbsp" + "<span style='float:right'>" + content[9] + "</span></div>")
+            new_cont = arr.join('');
+            tips($(this), new_cont, 'auto', 'auto', 1);
+        });
+
+        /*
+       *小tips,鼠标悬停提示
+       */
+        function tips(element, content, width, height, direction, colour) {
+            height = height || 'auto';
+            width = width || 'auto';
+            direction = direction || 1;//提示层默认在上方出现
+            colour = colour || '#3595CC';
+            element.hover(
+                function tips() {
+                    index = layer.tips(content, element, {
+                        tips: [direction, colour],
+                        time: 100000000000,
+                        area: [width, height]
+                    });
+                },
+                function () {
+                    layer.closeAll('tips');
+                }
+            );
+        }
+        </script>
+{% endfor %}

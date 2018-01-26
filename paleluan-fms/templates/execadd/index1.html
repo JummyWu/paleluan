@@ -1,0 +1,131 @@
+{% extends 'base/base_site.html' %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="/static/css/plugins/chosen/chosen.css">
+{{ block.super}}
+<style type="text/css">
+  .form-control-bulk-import {
+    width:200px;
+    display:inline;
+}
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="ibox-title">
+  <h5>exec数据</h5>
+</div>
+<div class="ibox-content">
+  <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline">
+    <div class="row">
+      <div class="col-sm-8">
+        <div class="dataTables_length" id="DataTables_Table_0_length" style="margin-bottom:15px;">
+        {{request.perms.List}}
+{#            <a href='{% url "execadd_name" %}' class="btn btn-sm btn-success"><i class="fa fa-plus"></i> 上传execl</a>#}
+
+{#            <input class="btn btn-sm btn-success" type="file" id="fafafa" name="afafaf" style="float:left"/>#}
+{#            <input type="button" value="提交jQuery" onclick="jqSubmit();" />#}
+
+
+            {% if request.user.is_superuser %}
+                <form  action="{% url 'execadd_file' %}" method="POST" enctype="multipart/form-data" target="ifm1" style="float:left" >
+                <iframe id="ifm1" name="ifm1" style="display:none;"></iframe>
+                <input  type="file" name="fafafa"/>
+                <input type="submit" onclick="iframeSubmit();" value="提交"/>
+                <a href="listadd">刷新</a>
+                <a href="/xadmin/execadd/execfile/">导出execl文档</a>
+            </form>
+            {% else %}
+                <form  action="{% url 'execadd_file' %}" method="POST" enctype="multipart/form-data" target="ifm1" style="float:left" >
+                <iframe id="ifm1" name="ifm1" style="display:none;"></iframe>
+                <input  type="file" name="fafafa"/>
+                <input type="submit" onclick="iframeSubmit();" value="提交"/>
+                <a href="listadd">刷新</a>
+            </form>
+
+            {% endif %}
+
+            <input type="text" placeholder="搜索: 专业、负责人、时间" id="search" class="form-control input-sm" style="float:left">
+
+
+        </div>
+      </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover dataTables-example dataTable dtr-inline" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
+      <thead>
+        <tr role="row">
+            <th  tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending">ID</th>
+            <th  tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" >专业</th>
+            <th  tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" >工作类型</th>
+            <th  tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" >工作内容</th>
+            <th  tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" >日期</th>
+            <th  tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" >开始时间</th>
+            <th  tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" >时长(小时)</th>
+            <th  tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" >涉及网元</th>
+            <th  tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" >工作发起人(部门/名字)</th>
+            <th  tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" >互联网室负责人</th>
+            <th  tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" >涉及的EOMS公共号</th>
+
+{#            <th  tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" >涉及的EOMS单号</th>#}
+            <th  tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" >工作实施人</th>
+            <th  tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" >备注</th>
+{#            <th  tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" >是否成功</th>#}
+
+
+{#          <th  tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" >主导改进</th>#}
+{#          <th  tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" >持续时间</th>#}
+{#          <th  tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" >故障状态</th>#}
+{#          <th  tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" >创建者</th>#}
+{#          <th  tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" >创建时间</th>#}
+{#          <th  tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" >操作</th>#}
+
+        </tr>
+      </thead>
+      <tbody id="content">
+      {% include 'execadd/execadd_table.html' %}
+      </tbody>
+    </table>
+
+
+{% include 'common/paginator.html' %}
+</div>
+{% endblock %}
+
+    <script src="/static/jquery-1.12.4.js"></script>
+    <script>
+
+
+      function jqSubmit(){
+
+            var file_obj = document.getElementById('fafafa').files[0];//files 要上传的文件  file_obj对象
+
+            var fd = new FormData();
+            fd.append('username','root');
+            fd.append('fafafa',file_obj);
+
+            $.ajax({
+                url: '/upload_file/',
+                type: 'POST',
+                data: fd,
+                processData: false,  // tell jQuery not to process the data
+                contentType: false,  // tell jQuery not to set contentType
+                success:function(arg,a1,a2){
+                    console.log(arg);
+                    console.log(a1);
+                    console.log(a2);
+                }
+            })
+        }
+
+
+      function iframeSubmit(){
+            $('#ifm1').load(function(){
+                var text= $('#ifm1').contents().find('body').text();
+                var obj = JSON.parse(text)
+                console.log(obj)
+            })
+        }
+
+
+    </script>
